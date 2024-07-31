@@ -1,56 +1,55 @@
+import {useState} from 'react';
 
-const Header = (props) => {
-  <>
-    return (
-      <h1>{props.course}</h1>
-    )
-  </>
-}
+const StatisticLine = ({name,value}) => <div>{name} {value}</div>
 
-const Part = (props) => {
+const Statistics = ({data}) => {
+  if(data.all==0) return <p>No feedback given</p>
   return (
-    <div>
-      <p>{props.part} {props.exercise}</p>
-    </div>
-  )
-}
-
-const Content = (props) => {
-  return (
-    <>
-      <Part part={props.parts[0]} exercise={props.exercise[0]}/> 
-      <Part part={props.parts[1]} exercise={props.exercise[1]}/> 
-      <Part part={props.parts[2]} exercise={props.exercise[2]}/> 
-   </>
-  )
-}
-
-const Total = (props) => {
-  return (
-    <>
-      <p>Number of exercises {props.exercise[0] + props.exercise[1] + props.exercise[2]}</p>
-    </>
+  <div>
+    <StatisticLine name="good" value={data.good}></StatisticLine>
+    <StatisticLine name="neutral" value={data.neutral}></StatisticLine>
+    <StatisticLine name="bad" value={data.bad}/>
+    <StatisticLine name="all" value={data.all}/>
+    <StatisticLine name="average" value={(data.good-data.bad)/data.all}/>
+    <StatisticLine name="positive" value={`${(data.good/data.all)*100} %`} />
+  </div>
   )
 }
 
 const App = () => {
-  const course = 'Half Stack application development'
-  const part1 = 'Fundamentals of React'
-  const exercises1 = 10
-  const part2 = 'Using props to pass data'
-  const exercises2 = 7
-  const part3 = 'State of a component'
-  const exercises3 = 14
-  const parts = [part1,part2,part3]
-  const exercise = [exercises1,exercises2,exercises3]
+
+  const [good, setGood] = useState(0)
+  const [neutral, setNeutral] = useState(0)
+  const [bad, setBad] = useState(0)
+  const [all,setAll] = useState(0)
+
+  const handleGood = () => {
+    setGood(good+1)
+    setAll(all+1)
+  }
+
+  const handleBad = () => {
+    setBad(bad+1)
+    setAll(all+1)
+  }
+
+  const handleNeutral = () => {
+    setNeutral(neutral+1)
+    setAll(all+1)
+  }
+
+  const data = {"good" : good , "bad" : bad , "neutral" : neutral , "all" : all}
 
   return (
     <div>
-      <Header course={course}/>
-      <Content parts={parts} exercise={exercise} />
-      <Total exercise={exercise}/>
+    <h1>give feedback</h1>
+    <button onClick={handleGood}>good</button>
+    <button onClick={handleNeutral}>neutral</button>
+    <button onClick={handleBad}>bad</button>
+    <h1>Statistics</h1>
+    <Statistics data={data}/>
     </div>
   )
 }
 
-export default App
+export default App;
