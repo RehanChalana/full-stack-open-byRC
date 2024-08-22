@@ -1,4 +1,8 @@
 import { useState } from 'react'
+import PhoneBookForm from './components/PhoneBookForm'
+import Filter from './components/Filter'
+import PhoneNumbers from './components/PhoneNumbers'
+
 
 
 const App = () => {
@@ -52,24 +56,10 @@ const App = () => {
   return(
     <div>
       <h2>Phonebook</h2>
-      filter shown with <input  onChange={handleFilterChange} />
-      <h2>Add new</h2>
-      <form onSubmit={addNewNumber}>
-        <div>
-          name: <input value={newName} onChange={handleNameChange}/> <br/>
-          number: <input value={newNumber} onChange={handleNumberChange}/>
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      <Filter handleFilterChange={handleFilterChange}/>
+      <PhoneBookForm newName={newName} newNumber={newNumber} addNewNumber={addNewNumber} handleNameChange={handleNameChange} handleNumberChange={handleNumberChange}/>
       <h2>Numbers</h2>
-      <div>
-        {filteredPerson.map((x) => {
-          // console.log(x.name)
-          return <p key={x.id}>{x.name} : {x.number}</p>
-        })}
-      </div>
+      <PhoneNumbers filteredPerson={filteredPerson}/>
     </div>
   )
 }
