@@ -48,17 +48,28 @@ const App = () => {
       name: newName,
       number: newNumber
     }
-    if(person.some((x) => x.name===newName)) {
-      alert(`${newName} is already added to phonebook`)
-      return
-    }
-    service
+      const presentPerson = person.find(x => x.name === newName);
+      if(presentPerson && window.confirm(`The person ${presentPerson.name} already exists do you want to update?`)) {
+        service
+            .update(presentPerson.id,newNameObject)
+            .then(response => {
+              let updatedPerson = person.map(x => x.id!==presentPerson.id ? x : response);
+              setPerson(updatedPerson)
+              setFilteredPerson(updatedPerson)
+            })
+      } else {
+        service
         .create(newNameObject)
         .then(response => {
            const updatedPerson = person.concat(response)
            setPerson(updatedPerson)
            setFilteredPerson(updatedPerson)
         })
+      }
+
+      
+    
+    
     setNewName('')
     setNewNumber('')
   }

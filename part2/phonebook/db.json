@@ -1,3 +1,24 @@
 {
-  "persons": []
+  "persons": [
+    {
+      "name": "Rehan Chalana",
+      "number": "13878181",
+      "id": "b90d"
+    },
+    {
+      "name": "Marilyn Jain",
+      "number": "28329191",
+      "id": "a936"
+    },
+    {
+      "name": "Ashwika",
+      "number": "1392992",
+      "id": "d0b0"
+    },
+    {
+      "id": "b98e",
+      "name": "Rehan Chalana",
+      "number": "134212"
+    }
+  ]
 }

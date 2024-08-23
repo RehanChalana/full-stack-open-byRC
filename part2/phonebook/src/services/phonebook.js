@@ -14,4 +14,8 @@ const deleteDb = (id) => {
     return axios.delete(`${url}/${id}`).then((response) => response.data)
 }
 
-export default {findAll, create, deleteDb}
+const update = (id, newObject) => {
+    return axios.put(`${url}/${id}`, newObject).then((response) => response.data)
+}
+
+export default {findAll, create, deleteDb, update}
