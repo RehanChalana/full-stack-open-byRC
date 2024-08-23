@@ -3,6 +3,7 @@ import PhoneBookForm from './components/PhoneBookForm'
 import Filter from './components/Filter'
 import PhoneNumbers from './components/PhoneNumbers'
 import axios from 'axios'
+import service from './services/phonebook'
 
 
 
@@ -13,11 +14,11 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
 
   useEffect(() => {
-    axios
-        .get('http://localhost:3001/persons')
+    service
+        .findAll()
         .then(response => {
-          setPerson(response.data)
-          setFilteredPerson(response.data)
+          setPerson(response)
+          setFilteredPerson(response)
         })
   }, [])
 
@@ -45,18 +46,37 @@ const App = () => {
     event.preventDefault()
     const newNameObject = {
       name: newName,
-      number: newNumber,
-      id: person.length+1
+      number: newNumber
     }
     if(person.some((x) => x.name===newName)) {
       alert(`${newName} is already added to phonebook`)
       return
     }
-    const updatedPerson = person.concat(newNameObject)
-    setPerson(updatedPerson)
-    setFilteredPerson(updatedPerson)
+    service
+        .create(newNameObject)
+        .then(response => {
+           const updatedPerson = person.concat(response)
+           setPerson(updatedPerson)
+           setFilteredPerson(updatedPerson)
+        })
     setNewName('')
     setNewNumber('')
+  }
+
+  const onDelete = (id) => {
+    const confirm = window.confirm('are you sure you want to delete this number ?')
+
+    if(confirm) {
+      service
+          .deleteDb(id)
+          .then(() => {
+            const updatedPerson = person.filter(x => x.id!==id)
+            setPerson(updatedPerson)
+            setFilteredPerson(updatedPerson)
+          })
+    }
+    
+    
   }
 
   console.log('render', person.length , 'persons')
@@ -67,7 +87,7 @@ const App = () => {
       <Filter handleFilterChange={handleFilterChange}/>
       <PhoneBookForm newName={newName} newNumber={newNumber} addNewNumber={addNewNumber} handleNameChange={handleNameChange} handleNumberChange={handleNumberChange}/>
       <h2>Numbers</h2>
-      <PhoneNumbers filteredPerson={filteredPerson}/>
+      <PhoneNumbers filteredPerson={filteredPerson} onDelete={onDelete}/>
     </div>
   )
 }
